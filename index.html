@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOLE — Premium Footwear</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #0a0a0a; --dark: #111111; --card: #1a1a1a;
+      --border: #2a2a2a; --accent: #ff3c00; --accent2: #ff6b35;
+      --white: #f5f5f5; --gray: #888888; --light: #cccccc;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px;
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 4px; color: var(--white); cursor: pointer; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { color: var(--gray); text-decoration: none; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; cursor: pointer; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-cart {
+      background: var(--accent); color: white; border: none;
+      padding: 10px 24px; font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; cursor: pointer; transition: background 0.2s;
+    }
+    .nav-cart:hover { background: var(--accent2); }
+
+    /* PAGES */
+    .page { display: none; padding-top: 80px; min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* HERO */
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; padding: 60px 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: 'SOLE'; position: absolute;
+      font-family: 'Bebas Neue', sans-serif; font-size: 30vw;
+      color: rgba(255,255,255,0.02); top: 50%; left: 50%;
+      transform: translate(-50%, -50%); pointer-events: none;
+      letter-spacing: 10px; white-space: nowrap;
+    }
+    .hero-left { position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--accent); }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4rem, 8vw, 8rem); line-height: 0.95; letter-spacing: 2px; margin-bottom: 28px; }
+    .hero-title span { color: var(--accent); }
+    .hero-desc { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 420px; margin-bottom: 44px; }
+    .hero-cta { display: flex; gap: 16px; align-items: center; }
+    .btn-primary { background: var(--accent); color: white; border: none; padding: 16px 36px; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+    .btn-secondary { color: var(--light); background: transparent; border: 1px solid var(--border); padding: 16px 36px; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { border-color: var(--white); color: var(--white); }
+    .hero-right { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; }
+    .hero-shoe-wrapper { width: 500px; height: 500px; background: radial-gradient(circle at 50% 60%, #2a1a14 0%, transparent 70%); display: flex; align-items: center; justify-content: center; position: relative; }
+    .hero-shoe { width: 420px; height: 320px; object-fit: cover; filter: drop-shadow(0 30px 60px rgba(255,60,0,0.4)); animation: float 4s ease-in-out infinite; border-radius: 4px; }
+    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-20px) rotate(-5deg); } }
+    .hero-badge { position: absolute; top: 60px; right: 20px; width: 90px; height: 90px; border-radius: 50%; background: var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; animation: spin-slow 10s linear infinite; }
+    .hero-badge span:first-child { font-size: 1.5rem; line-height: 1; }
+    .hero-badge span:last-child { font-size: 0.6rem; letter-spacing: 1px; }
+    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .hero-stats { display: flex; gap: 40px; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border); }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--white); letter-spacing: 2px; }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: 0.7rem; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+    /* MARQUEE */
+    .marquee-strip { background: var(--accent); padding: 14px 0; overflow: hidden; white-space: nowrap; }
+    .marquee-inner { display: inline-block; animation: marquee 20s linear infinite; }
+    .marquee-inner span { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 6px; color: white; margin: 0 40px; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* CATEGORIES on home */
+    .home-cats { padding: 80px 60px; }
+    .section-eyebrow { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 4vw, 4rem); letter-spacing: 2px; line-height: 1; margin-bottom: 48px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .cat-card { background: var(--card); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.3s; position: relative; }
+    .cat-card:hover { border-color: var(--accent); transform: translateY(-6px); }
+    .cat-card img { width: 100%; height: 200px; object-fit: cover; transition: transform 0.4s; }
+    .cat-card:hover img { transform: scale(1.08); }
+    .cat-info { padding: 20px; }
+    .cat-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; margin-bottom: 4px; }
+    .cat-count { font-size: 0.7rem; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; }
+    .cat-arrow { position: absolute; bottom: 20px; right: 20px; color: var(--accent); font-size: 1.2rem; }
+
+    /* CATEGORY PAGE */
+    .cat-page-header { padding: 50px 60px 30px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 20px; }
+    .back-btn { background: transparent; border: 1px solid var(--border); color: var(--gray); padding: 10px 20px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; }
+    .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cat-page-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 3px; }
+    .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 40px 60px 80px; }
+    .product-card { background: var(--card); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all 0.3s; }
+    .product-card:hover { border-color: var(--accent); transform: translateY(-6px); }
+    .product-img { height: 260px; overflow: hidden; position: relative; background: #1a1a1a; }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .product-card:hover .product-img img { transform: scale(1.08); }
+    .product-tag { position: absolute; top: 16px; left: 16px; background: var(--accent); color: white; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; z-index: 1; }
+    .product-info { padding: 24px; }
+    .product-brand { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gray); margin-bottom: 6px; }
+    .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 16px; }
+    .product-footer { display: flex; justify-content: space-between; align-items: center; }
+    .product-price { font-size: 1.1rem; font-weight: 600; color: var(--accent); }
+    .product-price small { font-size: 0.75rem; color: var(--gray); text-decoration: line-through; margin-right: 6px; font-weight: 400; }
+    .add-btn { background: var(--accent); border: none; color: white; width: 42px; height: 42px; font-size: 1.4rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+    .add-btn:hover { background: var(--accent2); }
+
+    /* CART PAGE */
+    .cart-page { padding: 50px 60px 80px; }
+    .cart-page h1 { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 3px; margin-bottom: 40px; }
+    .cart-empty { text-align: center; padding: 80px 0; color: var(--gray); }
+    .cart-empty p { font-size: 1.1rem; margin-bottom: 24px; }
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 40px; }
+    .cart-items { display: flex; flex-direction: column; gap: 16px; }
+    .cart-item { background: var(--card); border: 1px solid var(--border); padding: 20px; display: flex; gap: 20px; align-items: center; }
+    .cart-item img { width: 90px; height: 90px; object-fit: cover; border-radius: 2px; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px; margin-bottom: 4px; }
+    .cart-item-cat { font-size: 0.7rem; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .cart-item-price { font-size: 1rem; font-weight: 600; color: var(--accent); }
+    .qty-controls { display: flex; align-items: center; gap: 12px; }
+    .qty-btn { background: var(--border); border: none; color: var(--white); width: 30px; height: 30px; cursor: pointer; font-size: 1rem; transition: background 0.2s; }
+    .qty-btn:hover { background: var(--accent); }
+    .qty-num { font-size: 0.95rem; font-weight: 600; min-width: 20px; text-align: center; }
+    .remove-btn { background: transparent; border: 1px solid var(--border); color: var(--gray); padding: 6px 14px; cursor: pointer; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; }
+    .remove-btn:hover { border-color: #ff0000; color: #ff0000; }
+    .cart-summary { background: var(--card); border: 1px solid var(--border); padding: 30px; height: fit-content; position: sticky; top: 100px; }
+    .cart-summary h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 24px; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 0.9rem; color: var(--gray); }
+    .summary-row.total { color: var(--white); font-weight: 600; font-size: 1.1rem; padding-top: 16px; border-top: 1px solid var(--border); margin-top: 8px; }
+    .checkout-btn { width: 100%; background: var(--accent); border: none; color: white; padding: 16px; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 24px; transition: background 0.2s; }
+    .checkout-btn:hover { background: var(--accent2); }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: white; padding: 14px 24px; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 40px 24px; }
+      .hero-right { display: none; }
+      .home-cats, .cart-page { padding: 40px 24px; }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+      .products-grid { grid-template-columns: 1fr 1fr; padding: 24px; }
+      .cart-layout { grid-template-columns: 1fr; }
+      .cat-page-header { padding: 30px 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">SOL<span>E</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a onclick="showPage('sneakers')" id="nav-sneakers">Sneakers</a></li>
+    <li><a onclick="showPage('boots')" id="nav-boots">Boots</a></li>
+    <li><a onclick="showPage('heels')" id="nav-heels">Heels</a></li>
+    <li><a onclick="showPage('casual')" id="nav-casual">Casual</a></li>
+  </ul>
+  <button class="nav-cart" onclick="showPage('cart')">🛒 Cart (<span id="cart-count">0</span>)</button>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">New Collection 2025</div>
+      <h1 class="hero-title">MOVE<br>WITH<br><span>FIRE</span></h1>
+      <p class="hero-desc">Premium footwear engineered for those who refuse to slow down. Built for the streets, designed for the bold.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="showPage('sneakers')">Shop Now</button>
+        <button class="btn-secondary" onclick="document.querySelector('.home-cats').scrollIntoView({behavior:'smooth'})">Explore</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">200<span>+</span></div><div class="stat-label">Styles</div></div>
+        <div><div class="stat-num">50<span>k</span></div><div class="stat-label">Customers</div></div>
+        <div><div class="stat-num">4.9<span>★</span></div><div class="stat-label">Rating</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-shoe-wrapper">
+        <img class="hero-shoe" src="images/1.jpg" alt="Featured Shoe"/>
+        <div class="hero-badge"><span>NEW</span><span>DROP</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span>FREE DELIVERY OVER RS. 5000</span><span>•</span>
+      <span>NEW ARRIVALS EVERY WEEK</span><span>•</span>
+      <span>30-DAY RETURNS</span><span>•</span>
+      <span>PREMIUM QUALITY GUARANTEED</span><span>•</span>
+      <span>FREE DELIVERY OVER RS. 5000</span><span>•</span>
+      <span>NEW ARRIVALS EVERY WEEK</span><span>•</span>
+      <span>30-DAY RETURNS</span><span>•</span>
+      <span>PREMIUM QUALITY GUARANTEED</span><span>•</span>
+    </div>
+  </div>
+
+  <section class="home-cats">
+    <div class="section-eyebrow">Browse By Type</div>
+    <div class="section-title">Categories</div>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="showPage('sneakers')">
+        <img src="images/1.jpg" alt="Sneakers"/>
+        <div class="cat-info">
+          <div class="cat-name">Sneakers</div>
+          <div class="cat-count">5 Styles</div>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+      <div class="cat-card" onclick="showPage('boots')">
+        <img src="images/6.jpg" alt="Boots"/>
+        <div class="cat-info">
+          <div class="cat-name">Boots</div>
+          <div class="cat-count">5 Styles</div>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+      <div class="cat-card" onclick="showPage('heels')">
+        <img src="images/11.jpg" alt="Heels"/>
+        <div class="cat-info">
+          <div class="cat-name">Heels</div>
+          <div class="cat-count">5 Styles</div>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+      <div class="cat-card" onclick="showPage('casual')">
+        <img src="images/17.jpg" alt="Casual"/>
+        <div class="cat-info">
+          <div class="cat-name">Casual</div>
+          <div class="cat-count">5 Styles</div>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SNEAKERS PAGE -->
+<div class="page" id="page-sneakers">
+  <div class="cat-page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+    <div class="cat-page-title">Sneakers</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">🔥 Hot</span><img src="images/1.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">SOLE Originals</div><div class="product-name">Air Blaze Pro</div><div class="product-footer"><div class="product-price"><small>Rs. 25,000</small>Rs. 18,000</div><button class="add-btn" onclick="addToCart('Air Blaze Pro','images/1.jpg',18000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">New</span><img src="images/2.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Urban Edge</div><div class="product-name">Street Runner</div><div class="product-footer"><div class="product-price">Rs. 13,500</div><button class="add-btn" onclick="addToCart('Street Runner','images/2.jpg',13500)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/3.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Neon Step</div><div class="product-name">Flash Rider X</div><div class="product-footer"><div class="product-price">Rs. 15,000</div><button class="add-btn" onclick="addToCart('Flash Rider X','images/3.jpg',15000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">Sale</span><img src="images/4.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Classic Co.</div><div class="product-name">White Legend</div><div class="product-footer"><div class="product-price"><small>Rs. 20,000</small>Rs. 14,000</div><button class="add-btn" onclick="addToCart('White Legend','images/4.jpg',14000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/16.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Fresh Kicks</div><div class="product-name">Cloud Boost</div><div class="product-footer"><div class="product-price">Rs. 16,500</div><button class="add-btn" onclick="addToCart('Cloud Boost','images/16.jpg',16500)">+</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOTS PAGE -->
+<div class="page" id="page-boots">
+  <div class="cat-page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+    <div class="cat-page-title">Boots</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">🔥 Hot</span><img src="images/6.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Trail Force</div><div class="product-name">Trekker DX</div><div class="product-footer"><div class="product-price"><small>Rs. 22,000</small>Rs. 14,000</div><button class="add-btn" onclick="addToCart('Trekker DX','images/6.jpg',14000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/7.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Rugged Co.</div><div class="product-name">Desert Storm</div><div class="product-footer"><div class="product-price">Rs. 19,000</div><button class="add-btn" onclick="addToCart('Desert Storm','images/7.jpg',19000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">New</span><img src="images/9.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Urban Boot</div><div class="product-name">City Walker</div><div class="product-footer"><div class="product-price">Rs. 17,500</div><button class="add-btn" onclick="addToCart('City Walker','images/9.jpg',17500)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/10.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Trail Force</div><div class="product-name">Brown Rider</div><div class="product-footer"><div class="product-price">Rs. 21,000</div><button class="add-btn" onclick="addToCart('Brown Rider','images/10.jpg',21000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">Sale</span><img src="images/20.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Heritage</div><div class="product-name">Classic Boot</div><div class="product-footer"><div class="product-price"><small>Rs. 28,000</small>Rs. 19,000</div><button class="add-btn" onclick="addToCart('Classic Boot','images/20.jpg',19000)">+</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEELS PAGE -->
+<div class="page" id="page-heels">
+  <div class="cat-page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+    <div class="cat-page-title">Heels</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">🔥 Hot</span><img src="images/11.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Luxe Line</div><div class="product-name">Red Stiletto</div><div class="product-footer"><div class="product-price">Rs. 22,500</div><button class="add-btn" onclick="addToCart('Red Stiletto','images/11.jpg',22500)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/12.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Glamour</div><div class="product-name">Evening Charm</div><div class="product-footer"><div class="product-price">Rs. 18,500</div><button class="add-btn" onclick="addToCart('Evening Charm','images/12.jpg',18500)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">New</span><img src="images/13.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Luxe Line</div><div class="product-name">Noir Classic</div><div class="product-footer"><div class="product-price">Rs. 24,000</div><button class="add-btn" onclick="addToCart('Noir Classic','images/13.jpg',24000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/14.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Azure</div><div class="product-name">Blue Sapphire</div><div class="product-footer"><div class="product-price"><small>Rs. 30,000</small>Rs. 21,000</div><button class="add-btn" onclick="addToCart('Blue Sapphire','images/14.jpg',21000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">Sale</span><img src="images/15.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Elegance</div><div class="product-name">Pearl White</div><div class="product-footer"><div class="product-price"><small>Rs. 20,000</small>Rs. 14,500</div><button class="add-btn" onclick="addToCart('Pearl White','images/15.jpg',14500)">+</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CASUAL PAGE -->
+<div class="page" id="page-casual">
+  <div class="cat-page-header">
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+    <div class="cat-page-title">Casual</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">🔥 Hot</span><img src="images/17.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Daily Wear</div><div class="product-name">Easy Step</div><div class="product-footer"><div class="product-price">Rs. 12,000</div><button class="add-btn" onclick="addToCart('Easy Step','images/17.jpg',12000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/18.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Comfort Zone</div><div class="product-name">Navy Slide</div><div class="product-footer"><div class="product-price">Rs. 9,500</div><button class="add-btn" onclick="addToCart('Navy Slide','images/18.jpg',9500)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">New</span><img src="images/19.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Urban Casual</div><div class="product-name">Weekend Vibe</div><div class="product-footer"><div class="product-price">Rs. 11,000</div><button class="add-btn" onclick="addToCart('Weekend Vibe','images/19.jpg',11000)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="images/5.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Breezy</div><div class="product-name">White Mist</div><div class="product-footer"><div class="product-price"><small>Rs. 15,000</small>Rs. 10,500</div><button class="add-btn" onclick="addToCart('White Mist','images/5.jpg',10500)">+</button></div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><span class="product-tag">Sale</span><img src="images/8.jpg" alt=""/></div>
+      <div class="product-info"><div class="product-brand">Streetwear</div><div class="product-name">Low Rider</div><div class="product-footer"><div class="product-price"><small>Rs. 18,000</small>Rs. 13,000</div><button class="add-btn" onclick="addToCart('Low Rider','images/8.jpg',13000)">+</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART PAGE -->
+<div class="page" id="page-cart">
+  <div class="cart-page">
+    <h1>Your Cart</h1>
+    <div id="cart-empty" class="cart-empty">
+      <p>Your cart is empty!</p>
+      <button class="btn-primary" onclick="showPage('home')">Continue Shopping</button>
+    </div>
+    <div id="cart-layout" class="cart-layout" style="display:none">
+      <div class="cart-items" id="cart-items-list"></div>
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal">Rs. 0</span></div>
+        <div class="summary-row"><span>Delivery</span><span>Rs. 250</span></div>
+        <div class="summary-row total"><span>Total</span><span id="total">Rs. 250</span></div>
+        <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let cart = [];
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + name);
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo(0, 0);
+    if (name === 'cart') renderCart();
+  }
+
+  function addToCart(name, img, price) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ name, img, price, qty: 1 });
+    }
+    updateCartCount();
+    showToast(name + ' added to cart!');
+  }
+
+  function updateCartCount() {
+    const total = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cart-count').textContent = total;
+  }
+
+  function renderCart() {
+    const list = document.getElementById('cart-items-list');
+    const empty = document.getElementById('cart-empty');
+    const layout = document.getElementById('cart-layout');
+
+    if (cart.length === 0) {
+      empty.style.display = 'block';
+      layout.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    layout.style.display = 'grid';
+
+    list.innerHTML = cart.map((item, i) => `
+      <div class="cart-item">
+        <img src="${item.img}" alt="${item.name}"/>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
+          <div class="qty-controls" style="margin-top:10px">
+            <button class="qty-btn" onclick="changeQty(${i}, -1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
+            <button class="remove-btn" onclick="removeItem(${i})">Remove</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('subtotal').textContent = 'Rs. ' + subtotal.toLocaleString();
+    document.getElementById('total').textContent = 'Rs. ' + (subtotal + 250).toLocaleString();
+  }
+
+  function changeQty(i, delta) {
+    cart[i].qty += delta;
+    if (cart[i].qty <= 0) cart.splice(i, 1);
+    updateCartCount();
+    renderCart();
+  }
+
+  function removeItem(i) {
+    cart.splice(i, 1);
+    updateCartCount();
+    renderCart();
+  }
+
+  function checkout() {
+    showToast('Order placed! Thank you! 🎉');
+    cart = [];
+    updateCartCount();
+    renderCart();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
